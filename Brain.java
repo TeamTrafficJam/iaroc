@@ -26,15 +26,21 @@ public class Brain extends IRobotCreateAdapter {
     public void initialize() throws ConnectionLostException {
         dashboard.log("Hello! I'm a Clever Robot!");
         dashboard.speak("Double O Three");
-        //turnLeft(50);
+//        turnLeft(50);
+//        turnRight(50);
         //what would you like me to do, Clever Human?
 
 
     }
 
     /* This method is called repeatedly. */
-    public void loop() throws ConnectionLostException {
-        GoldRush();
+    public void loop() throws ConnectionLostException
+    {
+        //readSensors(SENSORS_WALL_SIGNAL);
+      //  dashboard.log("Wall signal is: " + getWallSignal());
+       // randomCood();
+//        RightMaze();
+        //GoldRush2014();
 
 
     }
@@ -55,136 +61,237 @@ public class Brain extends IRobotCreateAdapter {
         }
     }
 
-    public void Maze() throws ConnectionLostException {
-        driveDirect(500, 100);
+    public void LeftMaze() throws ConnectionLostException {
+        driveDirect(500, 180);
+        readSensors(SENSORS_BUMPS_AND_WHEEL_DROPS);
+        if (isBumpLeft()||isBumpRight() == true) {
+            driveDirect(-500, -500);
+            SystemClock.sleep(100);
+            driveDirect(-500, 500);
+            SystemClock.sleep(350);
+        }
+    }
+
+    public void RightMaze() throws ConnectionLostException {
+        driveDirect(180, 500);
         readSensors(SENSORS_BUMPS_AND_WHEEL_DROPS);
         if (isBumpLeft() || isBumpRight() == true) {
             driveDirect(-500, -500);
             SystemClock.sleep(100);
-            driveDirect(-500, 500);
-            SystemClock.sleep(300);
+            driveDirect(500, -500);
+            SystemClock.sleep(350);
         }
-
-
     }
 
-    public void GoldRush() throws ConnectionLostException {
-        for (int i = 0; i < 65; i++) {
+    public void GoldRush2014() throws ConnectionLostException {
+        for (int i = 0; i < 65; i++)
+        {
+
             driveDirect(500, 500);
+
             readSensors(SENSORS_BUMPS_AND_WHEEL_DROPS);
+
             if (isBumpLeft() && isBumpRight() == true) {
+
                 driveDirect(-500, -500);
-                SystemClock.sleep(450);
+
+                SystemClock.sleep(650);
+
                 driveDirect(500, -500);
+
                 SystemClock.sleep(400);
+
             } else if (isBumpLeft() == true) {
+
                 driveDirect(-500, -500);
+
                 SystemClock.sleep(550);
+
                 driveDirect(-500, 500);
+
                 SystemClock.sleep(250);
+
             } else if (isBumpRight() == true) {
+
                 driveDirect(-500, -500);
+
                 SystemClock.sleep(550);
+
                 driveDirect(500, -500);
+
                 SystemClock.sleep(250);
+
             }
-        }
-        readSensors(SENSORS_INFRARED_BYTE);
-        if (getInfraredByte() == 255 && getInfraredByte() == 240 && getInfraredByte() == 242) {
-            beaconRead();
-        }
-//      SystemClock.sleep(3000);
 
-//    for (int j = 0; j < 13; j++) {
-//        readSensors(SENSORS_INFRARED_BYTE);
-//        dashboard.log("" + getInfraredByte());
-//        if (getInfraredByte() != 255 && getInfraredByte() != 240 && getInfraredByte() != 242) {
-//            beaconRead();
-//        }
-//        SystemClock.sleep(150);
-
-//    }
-
-    }
-
-    public void beaconRead() throws ConnectionLostException {
-        boolean robotIsInBeacon = true;
-
-        while (robotIsInBeacon == true) {
             readSensors(SENSORS_INFRARED_BYTE);
 
-            if (getInfraredByte() == 255 || getInfraredByte() == 240 || getInfraredByte() == 242) {
-                driveDirect(-500, 500);
-                for (int j = 0; j < 13; j++) {
-                    readSensors(SENSORS_INFRARED_BYTE);
-                    dashboard.log("" + getInfraredByte());
-                    if (getInfraredByte() != 255 && getInfraredByte() != 240 && getInfraredByte() != 242) {
-                        beaconRead();
-                    }
-                    SystemClock.sleep(150);
-                }
+            if (getInfraredByte() != 255 && getInfraredByte() != 240 &&getInfraredByte() != 242) {
 
-                robotIsInBeacon = false;
-            }
+                beaconRead();
 
-            if (getInfraredByte() == 244) {
-                driveDirect(250, 500);
-            }
-            if (getInfraredByte() == 252) {
-                driveDirect(500, 500);
-            }
-            if (getInfraredByte() == 248) {
-                driveDirect(500, 250);
-            }
-            if (getInfraredByte() == 246) {
-                driveDirect(500, 500);
-                readSensors(SENSORS_BUMPS_AND_WHEEL_DROPS);
-//                if (isBumpLeft() || isBumpRight()){
-//                    victoryDance();
-//                }
-            }
-            if (getInfraredByte() == 254) {
-                driveDirect(500, 500);
-                readSensors(SENSORS_BUMPS_AND_WHEEL_DROPS);
-//                if (isBumpLeft() || isBumpRight()){
-//                    victoryDance();
-//                }
-            }
-            if (getInfraredByte() == 250) {
-                driveDirect(500, 500);
-                readSensors(SENSORS_BUMPS_AND_WHEEL_DROPS);
-//                if (isBumpLeft() || isBumpRight()){
-////                    victoryDance();
-//                }
             }
 
         }
 
+        dashboard.speak("Searching For Beacon");
+
+// SystemClock.sleep(3000);
+
+        driveDirect(-500, 500);
+
+        for (int j = 0; j < 13; j++) {
+
+            readSensors(SENSORS_INFRARED_BYTE);
+
+            dashboard.log("" + getInfraredByte());
+
+            if (getInfraredByte() != 255 && getInfraredByte() != 240 && getInfraredByte() != 242) {
+
+                beaconRead();
+
+            }
+
+            SystemClock.sleep(150);
+
+
+        }
+
+
     }
 
 
-    //     public void turnRight(int degrees) throws ConnectionLostException
-//     {
-//
-//         driveDirect(300,0);
-//         readSensors(getAngle());
-//         if (totalAngle <= degrees)
-//         {
-//             return;
-//         }
-//         else
-//         {
-//         totalAngle= 0;
-//             driveDirect(0,0);
-//             return;
-//         }
-//     }
-    public void turnLeft(int degrees) throws ConnectionLostException {
+    public void beaconRead() throws ConnectionLostException {
+
+        boolean robotIsInBecan = true;
+
+
+        while (robotIsInBecan == true) {
+
+            readSensors(SENSORS_INFRARED_BYTE);
+
+
+            if (getInfraredByte() == 255 || getInfraredByte() == 240 || getInfraredByte() == 242) {
+
+                driveDirect(-500, 500);
+
+                for (int j = 0; j < 13; j++) {
+
+                    readSensors(SENSORS_INFRARED_BYTE);
+
+                    dashboard.log("" + getInfraredByte());
+
+                    if (getInfraredByte() != 255 && getInfraredByte() != 240 && getInfraredByte() != 242) {
+
+                        beaconRead();
+
+                    }
+
+                    SystemClock.sleep(150);
+
+                }
+
+
+                robotIsInBecan = false;
+
+            }
+
+// if (getInfraredByte() == 252)
+
+// {
+
+// driveDirect(500, 500);
+
+// }
+
+// if (getInfraredByte() == 244)
+
+// {
+
+// driveDirect(300, 500);
+
+// }
+
+// if (getInfraredByte() == 248)
+
+// {
+
+// driveDirect(500, 300);
+
+// }
+            if (getInfraredByte() == 244) {
+
+                driveDirect(250, 500);
+
+            } else if (getInfraredByte() == 252) {
+
+                driveDirect(500, 500);
+
+            } else if (getInfraredByte() == 248) {
+
+                driveDirect(500, 250);
+
+            } else if (getInfraredByte() == 246) {
+
+                driveDirect(500, 500);
+
+                readSensors(SENSORS_BUMPS_AND_WHEEL_DROPS);
+                if (isBumpLeft() || isBumpRight()) {
+                    driveDirect(-500, -500);
+                    SystemClock.sleep(500);
+                    driveDirect(300,-300);
+                    SystemClock.sleep(300);
+                    stop();
+                    //turnLeft(35);
+                    dashboard.log("done turning");
+//                    beaconRead();
+
+                }
+            }
+            else if (getInfraredByte() == 254) {
+
+                driveDirect(500, 500);
+
+                readSensors(SENSORS_BUMPS_AND_WHEEL_DROPS);
+                if (isBumpLeft() || isBumpRight()) {
+                    driveDirect(-500, -500);
+                    SystemClock.sleep(500);
+                    driveDirect(-300,300);
+                    SystemClock.sleep(300);
+                    stop();
+                    //turnRight(35);
+                    dashboard.log("done turning");
+
+                }
+            }
+
+
+            else if (getInfraredByte() == 250) {
+
+                driveDirect(500, 500);
+
+                readSensors(SENSORS_BUMPS_AND_WHEEL_DROPS);
+                if (isBumpLeft() || isBumpRight()) {
+
+                    driveDirect(-500, -500);
+                    SystemClock.sleep(500);
+                    driveDirect(300,-300);
+                    SystemClock.sleep(300);
+                    stop();
+                    //turnLeft(35);
+                    dashboard.log("done turning");
+
+                }
+            }
+        }
+    }
+
+   public void turnLeft(int degrees) throws ConnectionLostException {
 
         int currentAngle = 0;
         while (currentAngle <= degrees) {
             driveDirect(100, -100);
             readSensors(SENSORS_ANGLE);
+            dashboard.log("Current Angle is: " +currentAngle);
             currentAngle += getAngle();
         }
         stop();
@@ -196,15 +303,18 @@ public class Brain extends IRobotCreateAdapter {
             driveDirect(-100, 100);
             readSensors(SENSORS_ANGLE);
             currentAngle -= getAngle();
+            dashboard.log("Current Angle is: " +currentAngle);
             //dashboard.log("GetAngle is " + getAngle());
             //dashboard.log("CurrentAngle is " + currentAngle);
         }
         stop();
     }
 
-    public void stop() throws ConnectionLostException {
+    public void stop() throws ConnectionLostException
+    {
         driveDirect(0, 0);
     }
+
 
     public void beaconReads() throws ConnectionLostException
     {
@@ -348,6 +458,25 @@ public class Brain extends IRobotCreateAdapter {
         {
             dashboard.log("Nothing");
         }
+    }
+    public void randomCood() throws ConnectionLostException {
+        readSensors(SENSORS_BUMPS_AND_WHEEL_DROPS);
+        readSensors(SENSORS_WALL_SIGNAL);
+        driveDirect(450,500);
+        if (getWallSignal() > 2)
+        {
+            turnLeft(8);
+            driveDirect(500,500);
+            SystemClock.sleep(500);
+            turnRight(5);
+        }
+//        if (isBumpLeft() && isBumpRight());
+//        {
+//            dashboard.speak("Oh No");
+//            driveDirect(-500,-500);
+//            SystemClock.sleep(500);
+//            driveDirect(500,-500);
+//        }
     }
 }
 
